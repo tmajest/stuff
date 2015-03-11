@@ -6,10 +6,10 @@ set guioptions-=T " Removes top toolbar
 set guioptions-=r " Removes right hand scroll bar
 set go-=L " Removes left hand scroll bar
 
-nnoremap <a-j> 4jzz
-nnoremap <a-k> 4kzz
-vnoremap <a-j> 4jzz
-vnoremap <a-k> 4kzz
+nnoremap <a-j> 4<c-d>
+nnoremap <a-k> 4<c-u>
+vnoremap <a-j> 4<c-d>
+vnoremap <a-k> 4<c-u>
 
 " Visual repeat
 vnoremap . :normal .<cr>
