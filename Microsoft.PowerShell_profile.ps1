@@ -1,10 +1,7 @@
 ﻿
 
 
-# Load posh-git example profile
-. 'C:\GitHub\posh-git\profile.example.ps1'
-
-$GitPromptSettings.EnableFileStatus = $false
+cd ~
 
 Import-Module PSReadLine 
 Set-PSReadlineKeyHandler -Key Ctrl+W -Function BackwardKillWord
