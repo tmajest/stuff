@@ -1,5 +1,5 @@
-﻿
-
+$env:Path += ";C:\Python34"
+$env:Path += ";C:\Program Files (x86)\Vim\vim74"
 
 cd ~
 
