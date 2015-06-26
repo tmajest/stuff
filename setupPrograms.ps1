@@ -11,7 +11,7 @@ $powershellProfileLink = "https://raw.githubusercontent.com/tmajest/stuff/master
 $profileName = "Microsoft.Powershell_profile.ps1"
 
 $vimRoot = "C:\Program Files (x86)\Vim"
-$vimLink = "ftp://ftp.vim.org/pub/vim/pc/gvim74.exe"
+$vimLink = "http://ftp.vim.org/pub/vim/pc/gvim74.exe"
 $gvimExe = "gvim74.exe"
 $vimrcLink = "https://raw.githubusercontent.com/tmajest/stuff/master/_vimrc"
 $vimrcName = "_vimrc"
@@ -26,7 +26,7 @@ function Setup() {
     mkdir $tempDir -Force
 
     # Install OneGet
-    Get-PackageProvider -Name NuGet -ForceBootstrap
+    Get-PackageProvider -Name NuGet -ForceBootstrap -Force
 }
 
 function CleanUp() {
@@ -35,7 +35,7 @@ function CleanUp() {
 }
 
 function InstallPsReadLine() {
-    Find-Module -Name PsReadLine | Install-Module
+    Find-Module -Name PsReadLine | Install-Module -Force
 
     mkdir $powershellDir -Force
     wget $powershellProfileLink -OutFile $tempDir\$profileName
@@ -45,11 +45,11 @@ function InstallPsReadLine() {
 function InstallVim() {
     wget $vimLink -OutFile $tempDir\$gvimExe
     wget $vimrcLink -OutFile $tempDir\$vimrcName
-    wget $codeschoolLink -OutFile $tempDir\codeschoolName
+    wget $codeschoolLink -OutFile $tempDir\$codeschoolName
 
-    start $tempDir\$gvimExe
+    Start-Process $tempDir\$gvimExe -NoNewWindow -Wait
 
-    cp $tempDir\$vimrcName $vimRoot -Force
+    cp $tempDir\$vimrcName $vimRoot
     cp $tempDir\$codeschoolName $vimRoot\vimfiles\colors
 }
 
@@ -68,15 +68,16 @@ function InstallAll() {
 function Run() {
     Setup
 
-    if ($PsReadLine || $Vim || $Python) {
-        if ($PsReadLine)
+    if ($PsReadLine -or $Vim -or $Python) {
+        if ($PsReadLine) {
             InstallPsReadLine
-
-        if ($Vim)
+        }
+        if ($Vim) {
             InstallVim
-
-        if ($Python)
+        }
+        if ($Python) {
             InstallPython
+        }
     }
     else {
         InstallAll
@@ -86,3 +87,4 @@ function Run() {
 }
 
 Run
+
