@@ -1,4 +1,3 @@
-
 param (
     [switch]$PsReadLine = $false,
     [switch]$Vim = $false,
@@ -26,9 +25,6 @@ function Setup() {
     # Create temp directory
     mkdir $tempDir -Force
 
-    # Needed to run PsReadLine
-    Set-ExecutionPolicy RemoteSigned
-
     # Install OneGet
     Get-PackageProvider -Name NuGet -ForceBootstrap
 }
@@ -38,32 +34,28 @@ function CleanUp() {
     rmdir -Force -Recurse $tempDir
 }
 
-function DownloadFiles() {
-    # Get PowershellProfile
-    wget $powershellProfileLink -OutFile $tempDir\$profileName
-
-    # Get gvim and _vimrc and codeschool colorscheme
-    wget $vimLink -OutFile $tempDir\$gvimExe
-    wget $vimrcLink -OutFile $tempDir\$vimrcName
-    wget $codeschoolLink -OutFile $tempDir\codeschoolName
-
-    # Get python msi
-    wget $pythonLink -OutFile $temp\$pythonMsi
-}
-
 function InstallPsReadLine() {
     Find-Module -Name PsReadLine | Install-Module
 
     mkdir $powershellDir -Force
+    wget $powershellProfileLink -OutFile $tempDir\$profileName
     cp $tempDir\$profileName $powershellDir -Force
 }
 
 function InstallVim() {
+    wget $vimLink -OutFile $tempDir\$gvimExe
+    wget $vimrcLink -OutFile $tempDir\$vimrcName
+    wget $codeschoolLink -OutFile $tempDir\codeschoolName
+
     start $tempDir\$gvimExe
 
-    # Copy over _vimrc and codeschool colorscheme
     cp $tempDir\$vimrcName $vimRoot -Force
     cp $tempDir\$codeschoolName $vimRoot\vimfiles\colors
+}
+
+function InstallPython() {
+    wget $pythonLink -OutFile $temp\$pythonMsi
+    start $tempDir\$pythonMsi /quiet
 }
 
 function InstallAll() {
@@ -72,13 +64,9 @@ function InstallAll() {
     InstallPython
 }
 
-function InstallPython() {
-    start $tempDir\$pythonMsi /quiet
-}
 
 function Run() {
     Setup
-    DownloadFiles
 
     if ($PsReadLine || $Vim || $Python) {
         if ($PsReadLine)
@@ -96,6 +84,5 @@ function Run() {
 
     CleanUp
 }
-
 
 Run
