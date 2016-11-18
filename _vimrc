@@ -70,3 +70,4 @@ set noswapfile
 
 
 test
+test 2
